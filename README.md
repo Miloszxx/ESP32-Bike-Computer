@@ -20,11 +20,12 @@ A custom, fully functional bicycle head unit built around the ESP32 microcontrol
 
 ## Dependencies / Libraries
 
-To compile this code in Arduino IDE, you need the following libraries installed:
-* `TFT_eSPI` (graphics rendering, requires proper `User_Setup.h` configuration for your specific screen)
-* `XPT2046_Touchscreen` (touch input handling)
-* `TinyGPSPlus` (NMEA data parsing)
-* Built-in ESP32 libraries: `WiFi`, `WebServer`, `SD`, `BLEDevice`
+To compile this code correctly in Arduino IDE, install the following specific library versions via the Library Manager:
+* `TFT_eSPI` by Bodmer (v2.5.43) - *requires proper `User_Setup.h` configuration for your specific screen*
+* `XPT2046_Touchscreen` by Paul Stoffregen (v1.4.0)
+* `TinyGPSPlus` by Mikal Hart (v1.0.3)
+
+*Note: The project also relies on the built-in ESP32 core libraries (`WiFi`, `WebServer`, `SD`, `BLEDevice`). It is recommended to use ESP32 Board Package v2.0.14 or newer.*
 
 ## ⚠️ Important: Setup & Compilation
 
