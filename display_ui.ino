@@ -12,13 +12,9 @@ void drawServerScreen() {
   tft.drawString(WiFi.localIP().toString(), 120, 130, 4);
   tft.drawRect(5, 5, 230, 310, TFT_MAGENTA);
   
-  tft.drawRect(10, 220, 105, 60, TFT_CYAN);
+  tft.drawRect(10, 220, 220, 60, TFT_CYAN);
   tft.setTextColor(TFT_CYAN, TFT_WHITE);
-  tft.drawString("OFF WIFI", 62, 250, 2);
-
-  tft.drawRect(125, 220, 105, 60, TFT_MAGENTA);
-  tft.setTextColor(TFT_MAGENTA, TFT_WHITE);
-  tft.drawString("WIFI ON ->", 177, 250, 2);
+  tft.drawString("OFF WIFI & START RIDE", 120, 250, 2);
 }
 
 void drawMainScreen() {
@@ -92,7 +88,7 @@ void drawStatsScreen() {
   tft.setTextDatum(MC_DATUM); tft.drawString("STATISTICS", 120, 50, 4); tft.drawLine(60, 65, 180, 65, TFT_WHITE);
   tft.setTextDatum(ML_DATUM); 
   tft.drawString("ODO:", 10, 90, 4); tft.drawString("Trip A:", 10, 125, 4);
-  tft.drawString("Time:", 10, 175, 4); tft.drawString("Moving:", 10, 210, 4); tft.drawString("Max SPD:", 10, 245, 4); 
+  tft.drawString("Time:", 10, 175, 4); tft.drawString("Moving:", 10, 210, 4); tft.drawString("V-Max:", 10, 245, 4); 
   tft.drawRect(0, 275, 120, 45, TFT_WHITE); tft.drawRect(120, 275, 120, 45, TFT_WHITE); 
   tft.setTextDatum(MC_DATUM); tft.drawString("RESET", 60, 297, 4); tft.drawString("BACK", 180, 297, 4);
   refreshStatsNumbers();

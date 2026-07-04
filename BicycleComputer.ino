@@ -61,6 +61,17 @@ double distAccumulator = 0.0;
 int currentGradient = 0;
 float lastOdoSave = 0.0; 
 
+#define ALT_BUFFER_SIZE 10
+float altBuffer[ALT_BUFFER_SIZE];
+int altBufferIndex = 0;
+bool altBufferFilled = false;
+float smoothedAltitude = 0.0;
+float prevSmoothedAltitude = 0.0;
+float climbDistance = 0.0;
+
+
+
+
 int currentScreen = 4; // Starts at 4 (Home Server Mode)
 unsigned long lastUpdateTime = 0;
 unsigned long lastTouchTime = 0;
@@ -79,6 +90,22 @@ float prevSpeed = -1.0;
 String gpxBuffer = "";
 int gpxBufferCount = 0;
 File uploadFile;
+
+
+void updateAltitudeFilter(float newAlt) {
+  altBuffer[altBufferIndex] = newAlt;
+  altBufferIndex++;
+  if (altBufferIndex >= ALT_BUFFER_SIZE) {
+    altBufferIndex = 0;
+    altBufferFilled = true;
+  }
+  float sum = 0;
+  int count = altBufferFilled ? ALT_BUFFER_SIZE : altBufferIndex;
+  for (int i = 0; i < count; i++) {
+    sum += altBuffer[i];
+  }
+  smoothedAltitude = count > 0 ? sum / count : newAlt;
+}
 
 // =========================================================
 // SETUP FUNCTION
@@ -206,38 +233,45 @@ void loop() {
     drawMainScreen();
   }
 
-  if (currentScreen == 4) {
+if (currentScreen == 4) {
     server.handleClient();
     if (currentMillis - lastTouchCheck > 100) {
       lastTouchCheck = currentMillis;
+      if (gps.altitude.isValid()) {
+      updateAltitudeFilter(gps.altitude.meters());
+    }
+
+    if (gpsSpeed > 3.5) {
+      climbDistance += (gpsSpeed / 3.6);
+    }
+
+    if (climbDistance >= 15.0) {
+      if (prevSmoothedAltitude != 0.0) { 
+        float altDifference = smoothedAltitude - prevSmoothedAltitude;
+        currentGradient = (int)((altDifference / climbDistance) * 100.0);
+        if (currentGradient > 25) currentGradient = 25;
+        if (currentGradient < -25) currentGradient = -25;
+      }
+      prevSmoothedAltitude = smoothedAltitude;
+      climbDistance = 0.0; 
+      forceScreenRefresh = true;
+    }
       if (ts.touched()) {
         TS_Point p = ts.getPoint();
-        int x = map(p.x, 300, 3800, 0, 240);
         int y = map(p.y, 300, 3800, 0, 320);
         
         if (y > 210) {
-          if (x < 120) {
-            tft.fillScreen(TFT_BLACK);
-            tft.setTextDatum(MC_DATUM);
-            tft.drawString("Turning off WIFI...", 120, 160, 4);
-            WiFi.disconnect(true);
-            WiFi.mode(WIFI_OFF); 
-            setCpuFrequencyMhz(80); 
-            loadGPX(); 
-            currentScreen = 0;
-            forceScreenRefresh = true;
-            drawMainScreen();
-            delay(500);
-          } else {
-            tft.fillScreen(TFT_BLACK);
-            tft.setTextDatum(MC_DATUM);
-            tft.drawString("WIFI is ON...", 120, 160, 4);
-            loadGPX(); 
-            currentScreen = 0;
-            forceScreenRefresh = true;
-            drawMainScreen();
-            delay(500);
-          }
+          tft.fillScreen(TFT_BLACK);
+          tft.setTextDatum(MC_DATUM);
+          tft.drawString("Turning off WIFI...", 120, 160, 4);
+          WiFi.disconnect(true);
+          WiFi.mode(WIFI_OFF); 
+          setCpuFrequencyMhz(80); 
+          loadGPX(); 
+          currentScreen = 0;
+          forceScreenRefresh = true;
+          drawMainScreen();
+          delay(500);
         }
       }
     }
@@ -417,16 +451,12 @@ void loop() {
         double d = TinyGPSPlus::distanceBetween(gps.location.lat(), gps.location.lng(), prevLat, prevLon);
         if (d > 1.0 && gpsSpeed > 2.0) { 
           odo += (d / 1000.0);
-          if (isTrainingActive) { tripA += (d / 1000.0); saveGPXPoint(); }
-          distAccumulator += d;
-          if (distAccumulator >= 15.0) {
-            float currentAlt = gps.altitude.meters();
-            currentGradient = (int)(((currentAlt - prevAltitude) / distAccumulator) * 100.0);
-            if(currentGradient > 25) currentGradient = 25;
-            if(currentGradient < -25) currentGradient = -25;
-            prevAltitude = currentAlt; distAccumulator = 0.0; needsRefresh = true;
+          if (isTrainingActive) { 
+            tripA += (d / 1000.0); 
+            saveGPXPoint(); 
           }
-          prevLat = gps.location.lat(); prevLon = gps.location.lng();
+          prevLat = gps.location.lat();
+          prevLon = gps.location.lng();
         }
       }
     }
