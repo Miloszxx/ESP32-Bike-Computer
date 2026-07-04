@@ -394,7 +394,7 @@ void loop() {
         totalTimeSec += (totalTimeFraction / 1000);
         totalTimeFraction %= 1000;
       }
-      if (gpsSpeed > 6.0) {
+      if (gpsSpeed > 3.5) {
         movingTimeFraction += timeDelta;
         if (movingTimeFraction >= 1000) {
           movingTimeSec += (movingTimeFraction / 1000);
