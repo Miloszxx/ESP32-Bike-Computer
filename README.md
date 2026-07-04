@@ -28,7 +28,7 @@ To compile this code in Arduino IDE, you need the following libraries installed:
 
 ## ⚠️ Important: Setup & Compilation
 
-For security reasons, the Wi-Fi credentials file is excluded from this repository (via `.gitignore`). To compile the code, you must manually create a `secrets.h` file in the root project directory and paste the following template:
+For security reasons, the Wi-Fi credentials file is excluded from this repository. To compile the code, you must manually create a `secrets.h` file in the root project directory and paste the following template:
 
 ```cpp
 #pragma once
