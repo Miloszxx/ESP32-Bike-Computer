@@ -69,7 +69,10 @@ float smoothedAltitude = 0.0;
 float prevSmoothedAltitude = 0.0;
 float climbDistance = 0.0;
 
-
+// Climb tracking variables
+float climbStartAltitude = 0.0;
+int currentAscent = 0;
+bool isClimbing = false;
 
 
 int currentScreen = 4; // Starts at 4 (Home Server Mode)
@@ -245,12 +248,26 @@ if (currentScreen == 4) {
       climbDistance += (gpsSpeed / 3.6);
     }
 
-    if (climbDistance >= 15.0) {
+if (climbDistance >= 15.0) {
       if (prevSmoothedAltitude != 0.0) { 
         float altDifference = smoothedAltitude - prevSmoothedAltitude;
         currentGradient = (int)((altDifference / climbDistance) * 100.0);
         if (currentGradient > 25) currentGradient = 25;
         if (currentGradient < -25) currentGradient = -25;
+        
+        // Climb state logic
+        if (currentGradient >= 3) {
+          if (!isClimbing) {
+            isClimbing = true;
+            climbStartAltitude = prevSmoothedAltitude;
+          }
+          currentAscent = (int)(smoothedAltitude - climbStartAltitude);
+          if (currentAscent < 0) currentAscent = 0;
+        } else {
+          isClimbing = false;
+          climbStartAltitude = 0.0;
+          currentAscent = 0;
+        }
       }
       prevSmoothedAltitude = smoothedAltitude;
       climbDistance = 0.0; 

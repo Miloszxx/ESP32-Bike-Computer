@@ -81,6 +81,23 @@ void refreshMainScreenWithMap() {
   tft.drawString(String(gpsSpeed, 1), 230, 45, 7);
   tft.setTextPadding(0); tft.drawString("km/h", 230, 100, 4);
   drawCadenceUI();
+
+  // Climb UI overlay
+  if (isClimbing && currentGradient >= 3) {
+    int cx = 10;
+    int cy = 255;
+    
+    tft.fillTriangle(cx + 8, cy - 12, cx, cy, cx + 16, cy, TFT_DARKGREY);
+    tft.fillTriangle(cx + 18, cy - 16, cx + 8, cy, cx + 28, cy, TFT_WHITE);
+
+    tft.setTextColor(TFT_WHITE, TFT_BLACK);
+    tft.setTextDatum(ML_DATUM);
+    String climbText = String(currentGradient) + "%  +" + String(currentAscent) + "m";
+    tft.drawString(climbText, cx + 35, cy - 8, 2);
+  } else {
+    tft.fillRect(10, 235, 100, 25, TFT_BLACK);
+  }
+
 }
 
 void drawStatsScreen() {
