@@ -6,6 +6,7 @@
 void startGPXRecording() {
   gpxBuffer = "";
   gpxBufferCount = 0;
+  
   if (!SD.exists("/training.gpx")) {
     File file = SD.open("/training.gpx", FILE_WRITE);
     if (file) {
@@ -48,8 +49,6 @@ void saveGPXPoint() {
 
 void stopGPXRecording() {
   flushGPXBuffer();
-  File file = SD.open("/training.gpx", FILE_APPEND);
-  if (file) { file.println("</trkseg></trk></gpx>"); file.close(); }
 }
 
 void loadGPX() {
@@ -134,7 +133,25 @@ void handleDownload() {
   if (server.hasArg("file")) {
     String path = server.arg("file");
     if (SD.exists(path)) {
-      File file = SD.open(path, FILE_READ); server.streamFile(file, "application/octet-stream"); file.close(); return;
+      File file = SD.open(path, FILE_READ);
+      
+      if (path.endsWith(".gpx")) {
+        server.setContentLength(file.size() + 22);
+        server.sendHeader("Content-Disposition", "attachment; filename=training.gpx");
+        server.send(200, "application/octet-stream", "");
+        
+        WiFiClient client = server.client();
+        byte buffer[512];
+        while (file.available()) {
+          size_t count = file.read(buffer, 512);
+          client.write(buffer, count);
+        }
+        client.write((const uint8_t*)"</trkseg></trk></gpx>\n", 22);
+      } else {
+        server.streamFile(file, "application/octet-stream");
+      }
+      file.close();
+      return;
     }
   }
   server.send(404, "text/plain", "File Not Found");

@@ -409,8 +409,8 @@ if (climbDistance >= 15.0) {
           else if (currentScreen == 10) {
             if (x >= 150 && x <= 230 && y >= 40 && y <= 100) { 
               tripA = 0; totalTimeSec = 0; movingTimeSec = 0; maxSpeed = 0.0;
-              if (SD.exists("/stan.txt")) SD.remove("/stan.txt");
-              if (SD.exists("/trening.gpx")) SD.remove("/trening.gpx");
+              if (SD.exists("/state.txt")) SD.remove("/state.txt"); 
+              if (SD.exists("/training.gpx")) SD.remove("/training.gpx"); 
               currentScreen = 1; 
               forceScreenRefresh = true;
               drawStatsScreen();
