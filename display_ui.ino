@@ -46,6 +46,8 @@ void refreshMainScreenWithMap() {
     float scale = 3.0;
     int oldX = -1, oldY = -1;
 
+    tft.setClipRect(0, 31, 240, 243);
+
     for(int i = 0; i < routePointsCount; i++) {
       float dy = (routePoints[i].lat - currentLat) * 111320.0;
       float dx = (routePoints[i].lon - currentLon) * 111320.0 * cosLat;
@@ -59,7 +61,7 @@ void refreshMainScreenWithMap() {
       int minX = min(oldX, screenX); int maxX = max(oldX, screenX);
       int minY = min(oldY, screenY); int maxY = max(oldY, screenY);
       
-      if (oldX != -1 && oldY != -1 && maxX >= -10 && minX <= 250 && maxY >= -10 && minY <= 330) {
+      if (oldX != -1 && oldY != -1 && maxX >= -10 && minX <= 250 && maxY >= 20 && minY <= 285) {
         uint16_t routeColor;
         int p1 = routePointsCount / 6; int p2 = (routePointsCount * 2) / 6; int p3 = (routePointsCount * 3) / 6;
         int p4 = (routePointsCount * 4) / 6; int p5 = (routePointsCount * 5) / 6;
@@ -73,6 +75,8 @@ void refreshMainScreenWithMap() {
       }
       oldX = screenX; oldY = screenY;
     }
+
+    tft.clearClipRect();
   }
 
   tft.fillTriangle(120, 210, 110, 230, 130, 230, TFT_WHITE);
