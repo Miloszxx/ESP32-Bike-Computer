@@ -75,8 +75,6 @@ void refreshMainScreenWithMap() {
       }
       oldX = screenX; oldY = screenY;
     }
-
-    tft.clearClipRect();
   }
 
   tft.fillTriangle(120, 210, 110, 230, 130, 230, TFT_WHITE);
