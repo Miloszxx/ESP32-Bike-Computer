@@ -46,8 +46,6 @@ void refreshMainScreenWithMap() {
     float scale = 3.0;
     int oldX = -1, oldY = -1;
 
-    tft.setClipRect(0, 31, 240, 243);
-
     for(int i = 0; i < routePointsCount; i++) {
       float dy = (routePoints[i].lat - currentLat) * 111320.0;
       float dx = (routePoints[i].lon - currentLon) * 111320.0 * cosLat;
@@ -61,7 +59,9 @@ void refreshMainScreenWithMap() {
       int minX = min(oldX, screenX); int maxX = max(oldX, screenX);
       int minY = min(oldY, screenY); int maxY = max(oldY, screenY);
       
-      if (oldX != -1 && oldY != -1 && maxX >= -10 && minX <= 250 && maxY >= 20 && minY <= 285) {
+      // --- CZYSTA MATEMATYKA: Ochrona przycisków i paska stanu ---
+      // Rysujemy linię tylko wtedy, gdy w całości mieści się w bezpiecznym oknie mapy (Y: 31 do 274)
+      if (oldX != -1 && oldY != -1 && minX <= 240 && maxX >= 0 && minY >= 31 && maxY <= 274) {
         uint16_t routeColor;
         int p1 = routePointsCount / 6; int p2 = (routePointsCount * 2) / 6; int p3 = (routePointsCount * 3) / 6;
         int p4 = (routePointsCount * 4) / 6; int p5 = (routePointsCount * 5) / 6;
