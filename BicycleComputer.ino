@@ -17,9 +17,9 @@
 #include "config.h"
 #include "secrets.h"
 
-// =========================================================
-// GLOBAL OBJECTS
-// =========================================================
+
+//GLOBAL OBJECTS
+
 TFT_eSPI tft = TFT_eSPI(); 
 WebServer server(80);
 HardwareSerial gpsSerial(2);
@@ -28,21 +28,21 @@ SPIClass touchSpi = SPIClass(HSPI);
 XPT2046_Touchscreen ts(XPT2046_CS, XPT2046_IRQ);
 TaskHandle_t TaskBLE;
 
-// =========================================================
-// GLOBAL VARIABLES (State & Memory)
-// =========================================================
+// GLOBAL VARIABLES 
+
 int currentCadence = 0;
 bool bleConnected = false;
 uint16_t lastCrankRevs = 0;
 uint16_t lastCrankTime = 0;
 unsigned long lastCadenceSignalTime = 0;
+float totalRouteDistance = 0.0;
 
 struct RoutePoint { float lat; float lon; };
 RoutePoint routePoints[MAX_ROUTE_POINTS];
 int routePointsCount = 0;
 bool gpxLoaded = false;
 
-// --- GPS & Metrics ---
+//GPS
 float gpsSpeed = 0.0;
 float odo = 0.0;            
 float tripA = 0.0; 
@@ -50,7 +50,7 @@ float maxSpeed = 0.0;
 unsigned long totalTimeSec = 0;
 unsigned long movingTimeSec = 0;
 
-// --- DELTA TIME TRACKING (Garmin Fix) ---
+//DELTA TIME TRACKING 
 unsigned long totalTimeFraction = 0;
 unsigned long movingTimeFraction = 0;
 
@@ -75,7 +75,7 @@ int currentAscent = 0;
 bool isClimbing = false;
 
 
-int currentScreen = 4; // Starts at 4 (Home Server Mode)
+int currentScreen = 4; // Starts at 4 (hs mode)
 unsigned long lastUpdateTime = 0;
 unsigned long lastTouchTime = 0;
 unsigned long lastTouchCheck = 0;

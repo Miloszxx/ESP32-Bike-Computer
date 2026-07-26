@@ -52,16 +52,33 @@ void stopGPXRecording() {
 }
 
 void loadGPX() {
-  routePointsCount = 0; gpxLoaded = false;
+  routePointsCount = 0; 
+  gpxLoaded = false;
+  totalRouteDistance = 0.0;
+  
   File file = SD.open("/route.gpx");
   if (!file) return;
   
+  float prevLat = 0.0, prevLon = 0.0;
+
   while (file.available() && routePointsCount < MAX_ROUTE_POINTS) {
     String line = file.readStringUntil('\n');
-    int latIdx = line.indexOf("lat=\""); int lonIdx = line.indexOf("lon=\"");
+    int latIdx = line.indexOf("lat=\""); 
+    int lonIdx = line.indexOf("lon=\"");
+    
     if (latIdx > 0 && lonIdx > 0) {
-      routePoints[routePointsCount].lat = line.substring(latIdx + 5, line.indexOf("\"", latIdx + 5)).toFloat();
-      routePoints[routePointsCount].lon = line.substring(lonIdx + 5, line.indexOf("\"", lonIdx + 5)).toFloat();
+      float ptLat = line.substring(latIdx + 5, line.indexOf("\"", latIdx + 5)).toFloat();
+      float ptLon = line.substring(lonIdx + 5, line.indexOf("\"", lonIdx + 5)).toFloat();
+      
+      routePoints[routePointsCount].lat = ptLat;
+      routePoints[routePointsCount].lon = ptLon;
+      
+      if (routePointsCount > 0) {
+        totalRouteDistance += (TinyGPSPlus::distanceBetween(ptLat, ptLon, prevLat, prevLon) / 1000.0);
+      }
+      prevLat = ptLat;
+      prevLon = ptLon;
+      
       routePointsCount++;
     }
   }

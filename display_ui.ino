@@ -75,7 +75,15 @@ void refreshMainScreenWithMap() {
       }
       oldX = screenX; oldY = screenY;
     }
+    if (gpxLoaded && totalRouteDistance > 0.1) {
+    int routeProgress = (int)((tripA / totalRouteDistance) * 100.0);
+    if (routeProgress > 100) routeProgress = 100; 
+    
+    tft.setTextColor(TFT_DARKGREY, TFT_BLACK);
+    tft.setTextDatum(BL_DATUM);
+    tft.drawString(String(routeProgress) + "%", 5, 270, 2); 
   }
+}
 
   tft.fillTriangle(120, 210, 110, 230, 130, 230, TFT_WHITE);
   tft.setTextColor(TFT_WHITE, TFT_BLACK);
