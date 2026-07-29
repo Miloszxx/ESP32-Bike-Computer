@@ -22,4 +22,4 @@
 #define XPT2046_CS 33
 
 // --- Application Limits ---
-#define MAX_ROUTE_POINTS 1500
+#define MAX_ROUTE_POINTS 2500
