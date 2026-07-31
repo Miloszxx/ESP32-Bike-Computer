@@ -11,8 +11,8 @@ void startGPXRecording() {
     File file = SD.open("/training.gpx", FILE_WRITE);
     if (file) {
       file.println("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
-      file.println("<gpx version=\"1.1\" creator=\"ESP32 Bicycle Computer\" xmlns=\"http://www.topografix.com/GPX/1/1\" xmlns:gpxtpx=\"http://www.garmin.com/xmlschemas/TrackPointExtension/v1\">");
-      file.println("<trk><name>Ride ESP32</name><trkseg>");
+      file.println("<gpx version=\"1.1\" creator=\"Garmin Edge 830\" xmlns=\"http://www.topografix.com/GPX/1/1\" xmlns:gpxtpx=\"http://www.garmin.com/xmlschemas/TrackPointExtension/v1\">");
+      file.println("<trk><name>Ride ESP32</name><type>9</type><trkseg>");
       file.close();
     }
   }
