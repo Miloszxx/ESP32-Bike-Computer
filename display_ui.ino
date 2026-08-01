@@ -58,9 +58,7 @@ void refreshMainScreenWithMap() {
       
       int minX = min(oldX, screenX); int maxX = max(oldX, screenX);
       int minY = min(oldY, screenY); int maxY = max(oldY, screenY);
-      
-      // --- CZYSTA MATEMATYKA: Ochrona przycisków i paska stanu ---
-      // Rysujemy linię tylko wtedy, gdy w całości mieści się w bezpiecznym oknie mapy (Y: 31 do 274)
+
       if (oldX != -1 && oldY != -1 && minX <= 240 && maxX >= 0 && minY >= 31 && maxY <= 274) {
         uint16_t routeColor;
         int p1 = routePointsCount / 6; int p2 = (routePointsCount * 2) / 6; int p3 = (routePointsCount * 3) / 6;
@@ -79,7 +77,7 @@ void refreshMainScreenWithMap() {
     int routeProgress = (int)((tripA / totalRouteDistance) * 100.0);
     if (routeProgress > 100) routeProgress = 100; 
     
-    tft.setTextColor(TFT_BLACK, TFT_WHITE);   
+    tft.setTextColor(TFT_WHITE, TFT_BLACK);   
     tft.setTextDatum(TL_DATUM);
     tft.setTextPadding(40);
     tft.drawString(String(routeProgress) + "%", 5, 240, 2); 
