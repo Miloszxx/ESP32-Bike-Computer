@@ -78,11 +78,10 @@ void refreshMainScreenWithMap() {
   if (gpxLoaded && totalRouteDistance > 0.1) {
     int routeProgress = (int)((tripA / totalRouteDistance) * 100.0);
     if (routeProgress > 100) routeProgress = 100; 
-    
-    tft.setTextColor(TFT_BLACK, TFT_WHITE);   
-    tft.setTextDatum(TL_DATUM);
+    tft.setTextColor(TFT_WHITE, TFT_BLACK);   
+    tft.setTextDatum(BL_DATUM);
     tft.setTextPadding(40);
-    tft.drawString(String(routeProgress) + "%", 5, 240, 2); 
+    tft.drawString(String(routeProgress) + "%", 5, 270, 2); 
     tft.setTextPadding(0);
   }
 }
